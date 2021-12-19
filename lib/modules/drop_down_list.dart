@@ -23,11 +23,14 @@ class _DropDownListState extends State<DropDownList> {
         child: DropdownButton<String>(
           isExpanded: true,
           alignment: Alignment.center,
-          value: dropdownValue ?? widget.items[0],
+          value: widget.items.contains(dropdownValue)
+              ? dropdownValue
+              : widget.items[0],
           // icon: const Icon(Icons.arrow_drop_down),
           elevation: 10,
           style: const TextStyle(
             color: Colors.black,
+            fontSize: 16,
           ),
           underline: Container(
             height: 2,

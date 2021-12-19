@@ -1,9 +1,18 @@
+import 'dart:convert';
+
+import 'package:flutter/services.dart';
 import 'package:introduction_screen/introduction_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/material.dart';
 import './home_page.dart';
 import '../modules/drop_down_list.dart';
+
+Future<Map> loadJson(String jsonFileName) async {
+  final String response =
+      await rootBundle.loadString('assets/jsons/$jsonFileName');
+  return await json.decode(response);
+}
 
 class OnBoardingPage extends StatefulWidget {
   @override
@@ -15,18 +24,24 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   final _lastCarouselNo = 2;
   var _activeCarouselNo = 0;
+  late String _selectRevision;
+  late String _selectCourse;
+  Map _courseNameAndKey = {};
   String dropdownValue = '2021';
 
   void _onIntroEnd(context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isFirstOpen', false);
+    prefs.setString('selectedRevision', _selectRevision);
+    prefs.setString('selectedCourse', _courseNameAndKey[_selectCourse]);
+    prefs.setString('userName', nameTextFieldController.text);
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (_) => const HomePage(),
     ));
   }
 
   var nameTextFieldController = TextEditingController();
-  void nextCarousel() {
+  void _nextCarousel() {
     introKey.currentState?.next();
     // int nextPageIndex = ((introKey.currentState?.controller.page ?? 0) +
     //         (_isLastCarousel ? 0 : 1))
@@ -34,7 +49,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     // introKey.currentState?.animateScroll(nextPageIndex);
   }
 
-  void previousCarousel() {
+  void _previousCarousel() {
     introKey.currentState?.previous();
   }
 
@@ -58,6 +73,27 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   bool get _isFirstCarousel {
     return _activeCarouselNo == 0;
+  }
+
+  Future<List<String>> _getRevisions() async {
+    Map coursesData = await loadJson('courses.json');
+    List<String> revisionsList = (coursesData['revisions'])
+        .map<String>((value) => value.toString())
+        .toList();
+    revisionsList.insert(0, 'Choose Revision');
+    return revisionsList;
+  }
+
+  Future<List<String>> _getCourses() async {
+    Map coursesData = await loadJson('courses.json');
+    _courseNameAndKey = {};
+    List<String> coursessList = [];
+    coursesData[_selectRevision].forEach((k, v) {
+      coursessList.add(v['name']);
+      _courseNameAndKey[v['name']] = k;
+    });
+    coursessList.insert(0, 'Choose Course');
+    return coursessList;
   }
 
   @override
@@ -96,7 +132,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                       width: double.infinity,
                       height: 50,
                       child: ElevatedButton(
-                        onPressed: previousCarousel,
+                        onPressed: _previousCarousel,
                         child: const Text('Previous'),
                       ),
                     ),
@@ -113,7 +149,13 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
                 width: double.infinity,
                 height: 50,
                 child: ElevatedButton(
-                  onPressed: nextCarousel,
+                  onPressed: () {
+                    if (_isLastCarousel) {
+                      _onIntroEnd(context);
+                    } else {
+                      _nextCarousel();
+                    }
+                  },
                   child: _isLastCarousel ? Text("Done") : Text('Next'),
                   style: ElevatedButton.styleFrom(
                     primary: Colors.orange,
@@ -126,7 +168,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       ),
       pages: [
         PageViewModel(
-          title: "How should I call you",
+          title: 'How should I call you',
           image: _buildFullscrenImage('onboarding-1.jpg'),
           bodyWidget: TextField(
             autocorrect: false,
@@ -140,20 +182,44 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Revision year",
+          title: 'Revision year',
           image: _buildFullscrenImage('onboarding-2.jpg'),
-          bodyWidget: DropDownList(
-            items: ['2021', '2017', '2013'],
-            onChange: (value) => print(value),
+          bodyWidget: FutureBuilder(
+            future: _getRevisions(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return DropDownList(
+                  items: snapshot.data as List<String>,
+                  onChange: (value) => _selectRevision = value,
+                );
+              } else {
+                return DropDownList(
+                  items: ['Loading...'],
+                  onChange: (_) {},
+                );
+              }
+            },
           ),
           decoration: pageDecoration,
         ),
         PageViewModel(
-          title: "Your discipline?",
+          title: 'Your discipline?',
           image: _buildFullscrenImage('onboarding-3.jpg'),
-          bodyWidget: DropDownList(
-            items: ['2021', '2017', '2013'],
-            onChange: (value) => print(value),
+          bodyWidget: FutureBuilder(
+            future: _getCourses(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return DropDownList(
+                  items: snapshot.data as List<String>,
+                  onChange: (value) => _selectCourse = value,
+                );
+              } else {
+                return DropDownList(
+                  items: ['Select Revision'],
+                  onChange: (_) {},
+                );
+              }
+            },
           ),
           decoration: pageDecoration,
         ),

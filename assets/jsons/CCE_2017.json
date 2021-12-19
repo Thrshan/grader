@@ -1,0 +1,61 @@
+{
+  "noOfSemesters":1,
+  "semesterKeys": ["semester1"],
+  "semester1":[
+    {
+      "id": 0,
+      "name": "Mathematics",
+      "code": "MA001",
+      "credit": 2,
+      "elective": 0
+    },
+    {
+      "id": 1,
+      "name": "Applied Science",
+      "code": "AS001",
+      "credit": 2,
+      "elective": 0
+    },
+    {
+      "id": 2,
+      "name": "Quantum Physics",
+      "code": "QP001",
+      "credit": 2,
+      "elective": 0
+    },
+    {
+      "id": 3,
+      "name": "Doctor Strange Lab",
+      "code": "MS001",
+      "credit": 2,
+      "elective": 0
+    },
+    {
+      "id": 4,
+      "name": "Sage do Heal",
+      "code": "VA001",
+      "credit": 2,
+      "elective": 0
+    },
+    {
+      "id": 5,
+      "name": "Kung Fu Endineering",
+      "code": "KU001",
+      "credit": 2,
+      "elective": 0
+    },
+    {
+      "id": 6,
+      "name": "Helios is Kelios",
+      "code": "HK001",
+      "credit": 2,
+      "elective": 1
+    },
+    {
+      "id": 7,
+      "name": "Gorge Bush",
+      "code": "GB001",
+      "credit": 2,
+      "elective": 1
+    }
+  ]}

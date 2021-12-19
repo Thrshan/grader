@@ -1,0 +1,27 @@
+{
+    "revisions": ["2017", "2021"],
+    "2017":{
+        "CCE":{
+            "name": "Computer Communication Engineering",
+            "type": "B.E",
+            "file": "CCE_2017.json"
+        },
+        "CE":{
+            "name": "Chemical Engineering",
+            "type": "B.Tech",
+            "file": "CE_2017.json"
+        }
+    },
+    "2021":{
+        "NS":{
+            "name": "Nano Suit",
+            "type": "B.E",
+            "file": "CCE_2017.json"
+        },
+        "KOL":{
+            "name": "Kolos Language",
+            "type": "B.Tech",
+            "file": "CE_2017.json"
+        }
+    }
+}
