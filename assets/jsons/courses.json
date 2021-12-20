@@ -9,7 +9,7 @@
         "CE":{
             "name": "Chemical Engineering",
             "type": "B.Tech",
-            "file": "CE_2017.json"
+            "file": "CCE_2017.json"
         }
     },
     "2021":{
@@ -21,7 +21,7 @@
         "KOL":{
             "name": "Kolos Language",
             "type": "B.Tech",
-            "file": "CE_2017.json"
+            "file": "CCE_2017.json"
         }
     }
 }

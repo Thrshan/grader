@@ -8,12 +8,6 @@ import 'package:flutter/material.dart';
 import './home_page.dart';
 import '../modules/drop_down_list.dart';
 
-Future<Map> loadJson(String jsonFileName) async {
-  final String response =
-      await rootBundle.loadString('assets/jsons/$jsonFileName');
-  return await json.decode(response);
-}
-
 class OnBoardingPage extends StatefulWidget {
   @override
   _OnBoardingPageState createState() => _OnBoardingPageState();
@@ -28,6 +22,12 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   late String _selectCourse;
   Map _courseNameAndKey = {};
   String dropdownValue = '2021';
+
+  Future<Map> _loadJson(String jsonFileName) async {
+    final String response =
+        await rootBundle.loadString('assets/jsons/$jsonFileName');
+    return await json.decode(response);
+  }
 
   void _onIntroEnd(context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -76,7 +76,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   }
 
   Future<List<String>> _getRevisions() async {
-    Map coursesData = await loadJson('courses.json');
+    Map coursesData = await _loadJson('courses.json');
     List<String> revisionsList = (coursesData['revisions'])
         .map<String>((value) => value.toString())
         .toList();
@@ -85,7 +85,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
   }
 
   Future<List<String>> _getCourses() async {
-    Map coursesData = await loadJson('courses.json');
+    Map coursesData = await _loadJson('courses.json');
     _courseNameAndKey = {};
     List<String> coursessList = [];
     coursesData[_selectRevision].forEach((k, v) {
