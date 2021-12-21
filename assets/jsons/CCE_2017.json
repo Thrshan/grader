@@ -1,6 +1,6 @@
 {
   "noOfSemesters":1,
-  "semesterKeys": ["semester1"],
+  "semesterKeys": ["semester1", "semester2"],
   "semester1":[
     {
       "id": 0,
@@ -58,4 +58,29 @@
       "credit": 2,
       "elective": 1
     }
-  ]}
+  ],
+
+  "semester2":[
+    {
+      "id": 0,
+      "name": "Mathematics",
+      "code": "MA001",
+      "credit": 2,
+      "elective": 0
+    },
+    {
+      "id": 1,
+      "name": "Applied Science",
+      "code": "AS001",
+      "credit": 2,
+      "elective": 0
+    },
+    {
+      "id": 2,
+      "name": "Reyna steal Soul",
+      "code": "RS001",
+      "credit": 3,
+      "elective": 1
+    }
+  ]
+}

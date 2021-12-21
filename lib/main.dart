@@ -21,8 +21,8 @@ class MyApp extends StatelessWidget {
   Future<bool> _getIsFitstTime() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // await Future.delayed(const Duration(seconds: 5), () => {});
-    // return prefs.getBool('isFirstOpen') ?? true;
-    return true;
+    return prefs.getBool('isFirstOpen') ?? true;
+    // return true;
   }
 
   @override

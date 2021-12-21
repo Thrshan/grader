@@ -32,7 +32,7 @@ class DatabaseManager {
     const integerType = "INTEGER NOT NULL";
     const textType = "TEXT NOT NULL";
     db.execute('''
-    CREATE TABLE $tableName (
+    CREATE TABLE IF NOT EXISTS $tableName (
       ${SubjectFields.id} $idType,
       ${SubjectFields.name} $textType,
       ${SubjectFields.code} $textType,
@@ -72,9 +72,21 @@ class DatabaseManager {
     }
   }
 
-  Future readAll(String tableName) async {
+  Future<List<Subject>> readAll(String tableName) async {
     final db = await instance.database;
-    return await db.rawQuery("SELECT * FROM $tableName");
+    List<Map<String, Object?>> data =
+        await db.rawQuery("SELECT * FROM $tableName");
+
+    return data
+        .map((e) => Subject(
+              name: e[SubjectFields.name] as String,
+              code: e[SubjectFields.code] as String,
+              credit: e[SubjectFields.credit] as int,
+              elective: e[SubjectFields.elective] as int,
+              grade: e[SubjectFields.grade] as String,
+              id: e[SubjectFields.id] as int,
+            ))
+        .toList();
   }
 
   Future<List<Subject>> readMany(String tableName, int id) async {

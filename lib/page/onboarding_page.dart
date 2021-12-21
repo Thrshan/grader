@@ -31,7 +31,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   void _onIntroEnd(context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setBool('isFirstOpen', false);
+    // prefs.setBool('isFirstOpen', false);
     prefs.setString('selectedRevision', _selectRevision);
     prefs.setString('selectedCourse', _courseNameAndKey[_selectCourse]);
     prefs.setString('userName', nameTextFieldController.text);
