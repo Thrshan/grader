@@ -34,7 +34,7 @@ class _SemesterSlideState extends State<SemesterSlide> {
           if (snapshot.hasData) {
             return Center(
               child: SizedBox(
-                height: 600, // card height
+                height: 650, // card height
                 child: PageView.builder(
                   itemCount: _itemCount,
                   controller: PageController(viewportFraction: 0.9),
@@ -46,22 +46,47 @@ class _SemesterSlideState extends State<SemesterSlide> {
                         scale: i == _index ? 1 : 0.95,
                         child: Card(
                           margin: const EdgeInsets.symmetric(
-                            vertical: 10,
+                            vertical: 5,
                           ),
                           elevation: 4,
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(20)),
-                          child: ListView(
-                            children:
-                                ((snapshot.data as Map)[widget.semTableList[i]]
-                                        as List<Subject>)
-                                    .map(
-                                      (sub) => ListTile(
-                                        title: Text(sub.name),
-                                        subtitle: Text(sub.code),
-                                      ),
-                                    )
-                                    .toList(),
+                          child: Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.centerRight,
+                                child: Container(
+                                  margin: EdgeInsets.only(top: 10, right: 10),
+                                  height: 28,
+                                  width: 28,
+                                  decoration: const BoxDecoration(
+                                    // borderRadius: BorderRadius.circular(14),
+                                    shape: BoxShape.circle,
+                                    color: Colors.blue,
+                                  ),
+                                  child: const Icon(
+                                    Icons.edit,
+                                    size: 17,
+                                    color: Colors.white70,
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: ListView(
+                                  children: ((snapshot.data
+                                              as Map)[widget.semTableList[i]]
+                                          as List<Subject>)
+                                      .map(
+                                        (sub) => ListTile(
+                                          title: Text(sub.name),
+                                          subtitle: Text(sub.code),
+                                          trailing: Text(sub.grade),
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),

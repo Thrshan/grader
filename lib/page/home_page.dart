@@ -69,15 +69,15 @@ class _HomePageState extends State<HomePage> {
     preferences['selectedRevision'] = prefs.getString('selectedRevision')!;
     preferences['selectedCourse'] = prefs.getString('selectedCourse')!;
     preferences['userName'] = prefs.getString('userName')!;
-    bool isFirstTime = prefs.getBool('isFirstOpen') ?? true;
+    bool loadFromDB = prefs.getBool('loadFromDB') ?? true;
 
-    if (isFirstTime) {
+    if (loadFromDB) {
       await _gatherCourseData(preferences['selectedRevision'] as String,
           preferences['selectedCourse'] as String);
     }
     preferences['semTables'] = prefs.getStringList('semTables')!;
 
-    prefs.setBool('isFirstOpen', false);
+    prefs.setBool('loadFromDB', false);
     return preferences;
   }
 

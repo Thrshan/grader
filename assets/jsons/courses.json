@@ -22,6 +22,11 @@
             "name": "Kolos Language",
             "type": "B.Tech",
             "file": "CCE_2017.json"
+        },
+        "VAL":{
+            "name": "Valorant Mechanics",
+            "type": "B.Tech",
+            "file": "VAL_2021.json"
         }
     }
 }

@@ -1,0 +1,179 @@
+{
+    "noOfSemesters":3,
+    "semesterKeys": ["semester1", "semester2", "semester3"],
+    "semester1":[
+      {
+        "id": 0,
+        "name": "Riot Introduction",
+        "code": "RI001",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 1,
+        "name": "Games from Riot",
+        "code": "RI002",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 2,
+        "name": "Keyboard usage",
+        "code": "BA001",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 3,
+        "name": "Mouse usage",
+        "code": "BA002",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 4,
+        "name": "Valorant agents",
+        "code": "VA001",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 5,
+        "name": "Valorant Maps",
+        "code": "KU001",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 6,
+        "name": "Gaming Lab",
+        "code": "LA003",
+        "credit": 2,
+        "elective": 1
+      },
+      {
+        "id": 7,
+        "name": "Reflex Lab",
+        "code": "LA002",
+        "credit": 2,
+        "elective": 1
+      }
+    ],
+  
+    "semester2":[
+      {
+        "id": 0,
+        "name": "Sitting Posters",
+        "code": "BA003",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 1,
+        "name": "CSGO Mechanics",
+        "code": "CS001",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 1,
+        "name": "Charavter Powers",
+        "code": "VA002",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 1,
+        "name": "How to cry like Sage",
+        "code": "AG001",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 1,
+        "name": "Devour solus with Reyna",
+        "code": "AG002",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 1,
+        "name": "Dead undead Omen",
+        "code": "AG003",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 1,
+        "name": "Venomeous Viper",
+        "code": "AG004",
+        "credit": 2,
+        "elective": 0
+      },
+      {
+        "id": 2,
+        "name": "Shooting Lab",
+        "code": "LA003",
+        "credit": 3,
+        "elective": 1
+      }
+    ],
+    "semester3":[
+        {
+          "id": 0,
+          "name": "Hawk eye Sova",
+          "code": "AG005",
+          "credit": 2,
+          "elective": 0
+        },
+        {
+          "id": 1,
+          "name": "Boom Boom Raze",
+          "code": "AG005",
+          "credit": 2,
+          "elective": 0
+        },
+        {
+          "id": 1,
+          "name": "Jett the Airbender",
+          "code": "AG006",
+          "credit": 2,
+          "elective": 0
+        },
+        {
+          "id": 1,
+          "name": "Chamber the gentleman",
+          "code": "AG006",
+          "credit": 2,
+          "elective": 0
+        },
+        {
+          "id": 1,
+          "name": "Science kid Kill Joy",
+          "code": "AG007",
+          "credit": 2,
+          "elective": 0
+        },
+        {
+          "id": 1,
+          "name": "Spy Cypher",
+          "code": "AG008",
+          "credit": 2,
+          "elective": 0
+        },
+        {
+          "id": 1,
+          "name": "Pheonix raise from Ash",
+          "code": "AG009",
+          "credit": 2,
+          "elective": 0
+        },
+        {
+          "id": 2,
+          "name": "Who is Astra",
+          "code": "AG010",
+          "credit": 3,
+          "elective": 1
+        }
+      ]
+  }
