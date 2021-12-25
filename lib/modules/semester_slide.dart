@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:grader/models/subject.dart';
 
 import '../db/database_manager.dart';
+import '../page/edit_grade_page.dart';
 
 class SemesterSlide extends StatefulWidget {
   final List<String> semTableList;
@@ -22,6 +23,12 @@ class _SemesterSlideState extends State<SemesterSlide> {
       allSub[semTable] = await _db.readAll(semTable);
     }
     return allSub;
+  }
+
+  void _openEditGradePage(context) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (_) => const EditGradePage(),
+    ));
   }
 
   @override
@@ -55,20 +62,26 @@ class _SemesterSlideState extends State<SemesterSlide> {
                             children: [
                               Align(
                                 alignment: Alignment.centerRight,
-                                child: Container(
-                                  margin: EdgeInsets.only(top: 10, right: 10),
-                                  height: 28,
-                                  width: 28,
-                                  decoration: const BoxDecoration(
-                                    // borderRadius: BorderRadius.circular(14),
-                                    shape: BoxShape.circle,
-                                    color: Colors.blue,
+                                child: GestureDetector(
+                                  child: Container(
+                                    margin: const EdgeInsets.only(
+                                        top: 10, right: 10),
+                                    height: 28,
+                                    width: 28,
+                                    decoration: const BoxDecoration(
+                                      // borderRadius: BorderRadius.circular(14),
+                                      shape: BoxShape.circle,
+                                      color: Colors.blue,
+                                    ),
+                                    child: const Icon(
+                                      Icons.edit,
+                                      size: 17,
+                                      color: Colors.white70,
+                                    ),
                                   ),
-                                  child: const Icon(
-                                    Icons.edit,
-                                    size: 17,
-                                    color: Colors.white70,
-                                  ),
+                                  onTap: () {
+                                    _openEditGradePage(context);
+                                  },
                                 ),
                               ),
                               Expanded(
