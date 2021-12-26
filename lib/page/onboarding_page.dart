@@ -35,7 +35,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     prefs.setString('selectedRevision', _selectRevision);
     prefs.setString('selectedCourse', _courseNameAndKey[_selectCourse]);
     prefs.setString('userName', nameTextFieldController.text);
-    prefs.setBool('loadFromDB', true);
+    prefs.setBool('loadDBwithDefault', true);
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (_) => const HomePage(),
     ));

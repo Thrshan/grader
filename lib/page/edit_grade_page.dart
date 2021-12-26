@@ -1,13 +1,19 @@
 import 'package:flutter/material.dart';
 
 import 'dart:math' as math;
-import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:flutter/services.dart';
+import 'package:grader/models/subject.dart';
 import '../widgets/grade_wheel.dart';
+import '../db/database_manager.dart';
 
 class EditGradePage extends StatefulWidget {
-  const EditGradePage({Key? key}) : super(key: key);
+  final List<Subject> subjectsOfSem;
+  final String tableName;
+  const EditGradePage(
+      {required this.subjectsOfSem, required this.tableName, Key? key})
+      : super(key: key);
 
   @override
   _EditGradePageState createState() => _EditGradePageState();
@@ -24,73 +30,7 @@ class _EditGradePageState extends State<EditGradePage> {
   double initAngle = 0;
   String subName = "";
   String subCode = "";
-
-  List<Map<String, Object>> subs = [
-    {
-      "initAngle": 0.0,
-      "id": 0,
-      "name": "Mathematics",
-      "code": "MA001",
-      "credit": 2,
-      "grade": ""
-    },
-    {
-      "initAngle": 0.0,
-      "id": 1,
-      "name": "Applied Science",
-      "code": "AS001",
-      "credit": 2,
-      "grade": ""
-    },
-    {
-      "initAngle": 0.0,
-      "id": 2,
-      "name": "Quantum Physics",
-      "code": "QP001",
-      "credit": 2,
-      "grade": ""
-    },
-    {
-      "initAngle": 0.0,
-      "id": 3,
-      "name": "Doctor Strange Lab",
-      "code": "MS001",
-      "credit": 2,
-      "grade": ""
-    },
-    {
-      "initAngle": 0.0,
-      "id": 4,
-      "name": "Sage do Heal",
-      "code": "VA001",
-      "credit": 2,
-      "grade": ""
-    },
-    {
-      "initAngle": 0.0,
-      "id": 5,
-      "name": "Kung Fu Endineering",
-      "code": "KU001",
-      "credit": 2,
-      "grade": ""
-    },
-    {
-      "initAngle": 0.0,
-      "id": 6,
-      "name": "Helios is Kelios",
-      "code": "HK001",
-      "credit": 2,
-      "grade": ""
-    },
-    {
-      "initAngle": 0.0,
-      "id": 7,
-      "name": "Gorge Bush",
-      "code": "GB001",
-      "credit": 2,
-      "grade": ""
-    },
-  ];
+  final _db = DatabaseManager.instance;
 
   void _backToHomePage(context) {
     Navigator.of(context).pop();
@@ -98,6 +38,8 @@ class _EditGradePageState extends State<EditGradePage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Subject> subjectsOfSemester = widget.subjectsOfSem;
+
     Map calculateIndentMotion(double linearChange, int noOfIndent) {
       double angleRad;
       double angleRatio = 0;
@@ -137,41 +79,25 @@ class _EditGradePageState extends State<EditGradePage> {
       return {"angle": angleRad, "gradeIndex": indentNo};
     }
 
-    Future<void> _hideWheel(int id) async {
-      final prefs = await SharedPreferences.getInstance();
-      final counter = prefs.getInt('counter') ?? 0;
-      print(counter);
-
+    void _hideWheel() {
       setState(() {
         HapticFeedback.heavyImpact();
         _showWheelFlag = false;
       });
     }
 
-    void _showWheel(int id) {
+    void _showWheel(Subject subject) {
       HapticFeedback.lightImpact();
       setState(() {
         _showWheelFlag = true;
         _angle = 0;
-        subName = subs[id]["name"] as String;
-        subCode = subs[id]["code"] as String;
+        subName = subject.name;
+        subCode = subject.code;
         // initAngle = subs[id]["initAngle"] as double;
       });
     }
 
-    // Future testDB() async {
-    //   print(
-    //       // await DatabaseManager.instance.create(
-    //       //   const Subject(
-    //       //     name: "name",
-    //       //     code: "code",
-    //       //     credit: 3,
-    //       //   ),
-    //       // ),
-    //       await DatabaseManager.instance.readAll());
-    // }
-
-    void _rotateWheel(int id, double dragYChange) {
+    void _rotateWheel(Subject subject, double dragYChange) {
       setState(() {
         Map calcRotation;
         calcRotation =
@@ -179,124 +105,138 @@ class _EditGradePageState extends State<EditGradePage> {
         _angle = calcRotation["angle"] as double;
 
         // Later it should be ideal angle for that index
-        subs[id]["grade"] =
-            globalData.grades[calcRotation["gradeIndex"]]["letter"] as String;
+        subject.setGrade(
+            globalData.grades[calcRotation["gradeIndex"]]["letter"] as String);
         _showWheelFlag = true;
         // initAngle = subs[id]["initAngle"] as double;
-        subName = subs[id]["name"] as String;
-        subCode = subs[id]["code"] as String;
+        subName = subject.name;
+        subCode = subject.code;
       });
     }
 
-    return Stack(
-      children: [
-        Card(
-          // margin: EdgeInsets.all(20),
-          elevation: 5,
-          child: Container(
-            margin: EdgeInsets.all(5),
-            padding: EdgeInsets.all(5),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 50,
-                ),
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: GestureDetector(
-                    child: Container(
-                      margin: const EdgeInsets.only(top: 10, right: 10),
-                      height: 28,
-                      width: 28,
-                      decoration: const BoxDecoration(
-                        // borderRadius: BorderRadius.circular(14),
-                        shape: BoxShape.circle,
-                        color: Colors.red,
-                      ),
-                      child: const Icon(
-                        Icons.close_rounded,
-                        size: 17,
-                        color: Colors.white70,
-                      ),
-                    ),
-                    onTap: () {
-                      _backToHomePage(context);
-                    },
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Title'),
+      ),
+      body: Stack(
+        children: [
+          Card(
+            // margin: EdgeInsets.all(20),
+            elevation: 5,
+            child: Container(
+              margin: EdgeInsets.all(5),
+              padding: EdgeInsets.all(5),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 50,
                   ),
-                ),
-                Column(
-                  // crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: subs
-                      .map(
-                        (sub) => Container(
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(sub["name"] as String),
-                                  Text(sub["code"] as String)
-                                ],
-                              ),
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: GestureDetector(
-                                  onVerticalDragUpdate: (details) {
-                                    dragYPosition = details.globalPosition.dy;
-                                    dragYDelta = dragYPosition - pressYPosition;
-                                    _rotateWheel(sub["id"] as int, dragYDelta);
-                                    prevDragYDelta = dragYDelta;
-                                  },
-                                  onTapDown: (details) async {
-                                    pressYPosition = details.globalPosition.dy;
-                                    _showWheel(sub["id"] as int);
-                                    // await testDB();
-                                  },
-                                  // onVerticalDragStart: (_) {
-                                  //   HapticFeedback.mediumImpact();
-                                  // },
-                                  onVerticalDragEnd: (details) {
-                                    _hideWheel(sub["id"] as int);
-                                    //   _setInitAngle(sub["id"] as int);
-                                  },
-                                  onTapUp: (details) {
-                                    _hideWheel(sub["id"] as int);
-                                    //  _setInitAngle(sub["id"] as int);
-                                  },
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      color: Colors.orange,
-                                      shape: BoxShape.circle,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: GestureDetector(
+                      child: Container(
+                        margin: const EdgeInsets.only(top: 10, right: 10),
+                        height: 28,
+                        width: 28,
+                        decoration: const BoxDecoration(
+                          // borderRadius: BorderRadius.circular(14),
+                          shape: BoxShape.circle,
+                          color: Colors.red,
+                        ),
+                        child: const Icon(
+                          Icons.close_rounded,
+                          size: 17,
+                          color: Colors.white70,
+                        ),
+                      ),
+                      onTap: () {
+                        _backToHomePage(context);
+                      },
+                    ),
+                  ),
+                  Column(
+                    // crossAxisAlignment: CrossAxisAlignment.stretch,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: subjectsOfSemester
+                        .map(
+                          (sub) => Container(
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [Text(sub.name), Text(sub.code)],
+                                ),
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: GestureDetector(
+                                    onVerticalDragUpdate: (details) {
+                                      dragYPosition = details.globalPosition.dy;
+                                      dragYDelta =
+                                          dragYPosition - pressYPosition;
+                                      _rotateWheel(sub, dragYDelta);
+                                      prevDragYDelta = dragYDelta;
+                                    },
+                                    onTapDown: (details) async {
+                                      pressYPosition =
+                                          details.globalPosition.dy;
+                                      _showWheel(sub);
+                                    },
+                                    // onVerticalDragStart: (_) {
+                                    //   HapticFeedback.mediumImpact();
+                                    // },
+                                    onVerticalDragEnd: (details) {
+                                      _hideWheel();
+                                    },
+                                    onTapUp: (details) {
+                                      _hideWheel();
+                                    },
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.orange,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      height: 50,
+                                      width: 50,
+                                      margin: EdgeInsets.all(10),
+                                      child: Center(child: Text(sub.grade)),
                                     ),
-                                    height: 50,
-                                    width: 50,
-                                    margin: EdgeInsets.all(10),
-                                    child: Center(
-                                        child: Text(sub["grade"] as String)),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ],
+                        )
+                        .toList(),
+                  ),
+                  ElevatedButton(
+                    onPressed: () async {
+                      for (var subject in subjectsOfSemester) {
+                        await _db.update(
+                            widget.tableName, subject.id!, subject);
+                        print(subject.grade);
+                      }
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      await prefs.setBool('loadFromDB', true);
+                      _backToHomePage(context);
+                    },
+                    child: Text('dd'),
+                  ),
+                ],
+              ),
             ),
           ),
-        ),
-        _showWheelFlag
-            ? GradeWheel(
-                angle: _angle,
-                initAngle: initAngle,
-                subName: subName,
-                subCode: subCode,
-              )
-            : Container(),
-      ],
+          _showWheelFlag
+              ? GradeWheel(
+                  angle: _angle,
+                  initAngle: initAngle,
+                  subName: subName,
+                  subCode: subCode,
+                )
+              : Container(),
+        ],
+      ),
     );
   }
 }

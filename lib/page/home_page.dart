@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:grader/main.dart';
 import 'package:grader/models/subject.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -69,15 +68,15 @@ class _HomePageState extends State<HomePage> {
     preferences['selectedRevision'] = prefs.getString('selectedRevision')!;
     preferences['selectedCourse'] = prefs.getString('selectedCourse')!;
     preferences['userName'] = prefs.getString('userName')!;
-    bool loadFromDB = prefs.getBool('loadFromDB') ?? true;
+    bool loadTheDB = prefs.getBool('loadDBwithDefault') ?? true;
 
-    if (loadFromDB) {
+    if (loadTheDB) {
       await _gatherCourseData(preferences['selectedRevision'] as String,
           preferences['selectedCourse'] as String);
     }
     preferences['semTables'] = prefs.getStringList('semTables')!;
 
-    prefs.setBool('loadFromDB', false);
+    prefs.setBool('loadDBwithDefault', false);
     return preferences;
   }
 
@@ -93,8 +92,7 @@ class _HomePageState extends State<HomePage> {
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return SemesterSlide(
-                  semTableList: (snapshot.data as Map)['semTables'],
-                );
+                    semTableList: (snapshot.data as Map)['semTables']);
               } else if (snapshot.hasError) {
                 print(snapshot.error);
                 return Container();

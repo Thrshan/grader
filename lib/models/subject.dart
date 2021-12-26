@@ -4,7 +4,7 @@ class Subject {
   final int credit;
   final int elective;
   final int? id;
-  final String grade;
+  String grade;
 
   Subject({
     required this.name,
@@ -49,6 +49,10 @@ class Subject {
         grade: grade ?? this.grade,
         elective: elective ?? this.elective,
       );
+
+  void setGrade(String newGrade) {
+    this.grade = newGrade;
+  }
 }
 
 class SubjectFields {

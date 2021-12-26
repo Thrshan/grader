@@ -25,10 +25,19 @@ class _SemesterSlideState extends State<SemesterSlide> {
     return allSub;
   }
 
-  void _openEditGradePage(context) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (_) => const EditGradePage(),
-    ));
+  void _openEditGradePage(context, List<Subject> subOfSem, String tableName) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(
+          builder: (_) => EditGradePage(
+            subjectsOfSem: subOfSem,
+            tableName: tableName,
+          ),
+        ))
+        .then(_onGoBack);
+  }
+
+  Future _onGoBack(dynamic value) async {
+    setState(() {});
   }
 
   @override
@@ -80,7 +89,12 @@ class _SemesterSlideState extends State<SemesterSlide> {
                                     ),
                                   ),
                                   onTap: () {
-                                    _openEditGradePage(context);
+                                    _openEditGradePage(
+                                        context,
+                                        (snapshot.data
+                                                as Map)[widget.semTableList[i]]
+                                            as List<Subject>,
+                                        widget.semTableList[i]);
                                   },
                                 ),
                               ),
