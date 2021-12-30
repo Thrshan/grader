@@ -18,10 +18,13 @@ void main() async {
 class MyApp extends StatelessWidget {
   MyApp({Key? key}) : super(key: key);
 
-  Future<bool> _getIsFitstTime() async {
+  Future<Map> _loadDataOnOpen() async {
+    Map loadedData = {};
     SharedPreferences prefs = await SharedPreferences.getInstance();
     // await Future.delayed(const Duration(seconds: 5), () => {});
-    return prefs.getBool('isFirstOpen') ?? true;
+
+    loadedData['isFirstOpen'] = prefs.getBool('isFirstOpen') ?? true;
+    return loadedData;
     // return true;
   }
 
@@ -37,11 +40,13 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: FutureBuilder<bool>(
-        future: _getIsFitstTime(),
+      home: FutureBuilder<Map>(
+        future: _loadDataOnOpen(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            return snapshot.data ?? true ? OnBoardingPage() : const HomePage();
+            return (snapshot.data as Map)['isFirstOpen'] ?? true
+                ? OnBoardingPage()
+                : const HomePage();
           } else {
             return Container(
               color: Colors.white,
