@@ -221,7 +221,7 @@ class _EditGradePageState extends State<EditGradePage> {
                       await prefs.setBool('loadFromDB', true);
                       _backToHomePage(context);
                     },
-                    child: Text('dd'),
+                    child: Text('Save'),
                   ),
                 ],
               ),
