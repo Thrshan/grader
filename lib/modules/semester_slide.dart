@@ -43,7 +43,15 @@ class _SemesterSlideState extends State<SemesterSlide> {
     double totalCredit = 0;
     double securedCredit = 0;
     for (var subject in subjectsOfSem) {
-      if (subject.grade != (grades2021['RA'] as Grade).letter) {
+      print(subject.grade);
+
+      //To GPA as 0 when any of the firld is X aka new
+      if (subject.grade == 'X') {
+        return 0;
+      }
+
+      if (subject.grade != (grades2021['RA'] as Grade).letter &&
+          subject.grade != 'X') {
         totalCredit += subject.credit;
         securedCredit +=
             (subject.credit) * (grades2021[subject.grade] as Grade).point;
