@@ -4,6 +4,7 @@ import 'package:grader/page/dashboard_page.dart';
 
 import '../db/database_manager.dart';
 import '../page/edit_grade_page.dart';
+import '../models/grade.dart';
 
 class SemesterSlide extends StatefulWidget {
   final List<String> semTableList;
@@ -37,6 +38,21 @@ class _SemesterSlideState extends State<SemesterSlide> {
         .then(_onGoBack);
   }
 
+  double _calculateGpa(List<Subject> subjectsOfSem) {
+    // This code need to be more sophisticated to handle more regulations
+    double totalCredit = 0;
+    double securedCredit = 0;
+    for (var subject in subjectsOfSem) {
+      if (subject.grade != (grades2021['RA'] as Grade).letter) {
+        totalCredit += subject.credit;
+        securedCredit +=
+            (subject.credit) * (grades2021[subject.grade] as Grade).point;
+      }
+    }
+
+    return securedCredit / totalCredit;
+  }
+
   Future _onGoBack(dynamic value) async {
     setState(() {});
   }
@@ -51,7 +67,7 @@ class _SemesterSlideState extends State<SemesterSlide> {
           if (snapshot.hasData) {
             return Center(
               child: SizedBox(
-                height: 650, // card height
+                height: 670, // card height
                 child: PageView.builder(
                   itemCount: _itemCount,
                   controller: PageController(viewportFraction: 0.9),
@@ -83,7 +99,7 @@ class _SemesterSlideState extends State<SemesterSlide> {
                                           EdgeInsets.only(left: 15, top: 10),
                                       child: Text(
                                         'Semester ${j + 1}',
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 20,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -132,6 +148,23 @@ class _SemesterSlideState extends State<SemesterSlide> {
                                           ),
                                         )
                                         .toList(),
+                                  ),
+                                ),
+                                Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: Container(
+                                    child: Text(
+                                      'GPA ${_calculateGpa(
+                                        (snapshot.data
+                                                as Map)[widget.semTableList[j]]
+                                            as List<Subject>,
+                                      ).toStringAsFixed(2)}',
+                                      style: const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                    margin: const EdgeInsets.only(bottom: 16),
                                   ),
                                 ),
                               ],
