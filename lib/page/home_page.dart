@@ -7,7 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // import 'package:grader/modules/semester_slide.dart';
 import '../db/database_manager.dart';
-import '../modules/semester_slide.dart';
+import 'semester_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -91,7 +91,7 @@ class _HomePageState extends State<HomePage> {
             future: _loadPreferences(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return SemesterSlide(
+                return SemesterPage(
                     semTableList: (snapshot.data as Map)['semTables']);
               } else if (snapshot.hasError) {
                 print(snapshot.error);

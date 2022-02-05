@@ -23,7 +23,7 @@ class DashboardPage extends StatelessWidget {
             return Container(
               child: Column(
                 children: [
-                  Text('Dashboard here'),
+                  Text('Dashboard nhere'),
                   Text((snapshot.data as Map)['userName']),
                 ],
               ),

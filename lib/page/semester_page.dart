@@ -3,18 +3,18 @@ import 'package:grader/models/subject.dart';
 import 'package:grader/page/dashboard_page.dart';
 
 import '../db/database_manager.dart';
-import '../page/edit_grade_page.dart';
+import 'edit_grade_page.dart';
 import '../models/grade.dart';
 
-class SemesterSlide extends StatefulWidget {
+class SemesterPage extends StatefulWidget {
   final List<String> semTableList;
-  const SemesterSlide({required this.semTableList, Key? key}) : super(key: key);
+  const SemesterPage({required this.semTableList, Key? key}) : super(key: key);
 
   @override
   _SemesterSlideState createState() => _SemesterSlideState();
 }
 
-class _SemesterSlideState extends State<SemesterSlide> {
+class _SemesterSlideState extends State<SemesterPage> {
   int _index = 0;
 
   final _db = DatabaseManager.instance;
