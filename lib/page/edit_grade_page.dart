@@ -11,8 +11,12 @@ import '../db/database_manager.dart';
 class EditGradePage extends StatefulWidget {
   final List<Subject> subjectsOfSem;
   final String tableName;
+  final int semNo;
   const EditGradePage(
-      {required this.subjectsOfSem, required this.tableName, Key? key})
+      {required this.semNo,
+      required this.subjectsOfSem,
+      required this.tableName,
+      Key? key})
       : super(key: key);
 
   @override
@@ -114,13 +118,12 @@ class _EditGradePageState extends State<EditGradePage> {
       });
     }
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Title'),
-      ),
-      body: Stack(
-        children: [
-          Card(
+    return Stack(
+      children: [
+        Hero(
+          tag: 'semCard${widget.semNo}',
+          child: Card(
+            color: Color(0x00EFEDE3),
             // margin: EdgeInsets.all(20),
             elevation: 5,
             child: Container(
@@ -227,16 +230,16 @@ class _EditGradePageState extends State<EditGradePage> {
               ),
             ),
           ),
-          _showWheelFlag
-              ? GradeWheel(
-                  angle: _angle,
-                  initAngle: initAngle,
-                  subName: subName,
-                  subCode: subCode,
-                )
-              : Container(),
-        ],
-      ),
+        ),
+        _showWheelFlag
+            ? GradeWheel(
+                angle: _angle,
+                initAngle: initAngle,
+                subName: subName,
+                subCode: subCode,
+              )
+            : Container(),
+      ],
     );
   }
 }

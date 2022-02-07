@@ -8,9 +8,10 @@ import './page/onboarding_page.dart';
 
 bool isFirstOpen = true;
 void main() async {
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent,
-  ));
+  // SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+  //   statusBarColor: Colors.blue,
+  // ));
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   WidgetsFlutterBinding.ensureInitialized();
   // isFirstOpen = true;
   runApp(MyApp());
@@ -31,6 +32,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ));
+    // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -40,15 +46,15 @@ class MyApp extends StatelessWidget {
       title: 'GPA Calculator',
       theme: ThemeData(
         brightness: Brightness.light,
-        splashColor: Color(0xFFCDA14B),
-        backgroundColor: Color(0xFFF5F5F1),
-        disabledColor: Color(0xFFB2B2B2),
+        splashColor: const Color(0xFFCDA14B),
+        backgroundColor: const Color(0xFFF5F5F1),
+        disabledColor: const Color(0xFFB2B2B2),
         fontFamily: 'RobotoSlab',
         textTheme: const TextTheme(
           headline1: TextStyle(
             fontSize: 36.0,
             fontWeight: FontWeight.w700,
-            // color: Color(0xFFD83E3E),
+            color: Color(0xFFD83E3E),
           ),
           // headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
           // bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
@@ -63,7 +69,7 @@ class MyApp extends StatelessWidget {
         //   brightness: Brightness.light,
 
         // ),
-        cardTheme: CardTheme(
+        cardTheme: const CardTheme(
           color: Color(0xFFEFEDE3),
         ),
       ),

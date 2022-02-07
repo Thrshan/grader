@@ -41,7 +41,7 @@ class DatabaseManager {
       ${SubjectFields.grade} $textType
     )
     ''');
-    print('Created $tableName');
+    // print('Created $tableName');
   }
 
   Future<Subject> create(String tableName, Subject data) async {

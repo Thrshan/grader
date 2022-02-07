@@ -7,6 +7,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import './home_page.dart';
 import '../modules/drop_down_list.dart';
+import './main_page.dart';
 
 class OnBoardingPage extends StatefulWidget {
   @override
@@ -37,7 +38,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     prefs.setString('userName', nameTextFieldController.text);
     prefs.setBool('loadDBwithDefault', true);
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (_) => const HomePage(),
+      builder: (_) => const MainPage(),
     ));
   }
 
