@@ -128,96 +128,108 @@ class _EditGradePageState extends State<EditGradePage> {
           Hero(
             tag: 'semCard${widget.semNo}',
             child: Container(
-              color: Color(0xFFF5F5F1),
+              // padding: const EdgeInsets.all(5),
               child: Material(
                 color: Colors.transparent,
                 child: Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 15, top: 10),
-                          child: Text(
-                            'Semester ${1}',
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: GestureDetector(
-                            child: Container(
-                              margin: const EdgeInsets.only(top: 10, right: 10),
-                              height: 28,
-                              width: 28,
-                              decoration: const BoxDecoration(
-                                // borderRadius: BorderRadius.circular(14),
-                                shape: BoxShape.circle,
-                                color: Colors.blue,
-                              ),
-                              child: const Icon(
-                                Icons.edit,
-                                size: 17,
-                                color: Colors.white70,
-                              ),
-                            ),
-                            onTap: () {},
-                          ),
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: ListView(
-                        padding: EdgeInsets.zero,
-                        physics: NeverScrollableScrollPhysics(),
-                        children: subjectsOfSemester
-                            .map(
-                              (sub) => ListTile(
-                                title: Text(sub.name),
-                                subtitle: Text(sub.code),
-                                trailing: GestureDetector(
-                                  onVerticalDragUpdate: (details) {
-                                    dragYPosition = details.globalPosition.dy;
-                                    dragYDelta = dragYPosition - pressYPosition;
-                                    _rotateWheel(sub, dragYDelta);
-                                    prevDragYDelta = dragYDelta;
-                                  },
-                                  onTapDown: (details) async {
-                                    pressYPosition = details.globalPosition.dy;
-                                    _showWheel(sub);
-                                  },
-                                  // onVerticalDragStart: (_) {
-                                  //   HapticFeedback.mediumImpact();
-                                  // },
-                                  onVerticalDragEnd: (details) {
-                                    _hideWheel();
-                                  },
-                                  onTapUp: (details) {
-                                    _hideWheel();
-                                  },
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      color: Colors.orange,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    height: 50,
-                                    width: 50,
-                                    margin: EdgeInsets.all(10),
-                                    child: Center(child: Text(sub.grade)),
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
+                    const SizedBox(
+                      height: 50,
                     ),
                     Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        child: Text('GPA'),
-                        margin: const EdgeInsets.only(bottom: 16),
+                      alignment: Alignment.centerLeft,
+                      child: GestureDetector(
+                        child: Container(
+                          margin: const EdgeInsets.only(top: 10, right: 10),
+                          height: 28,
+                          width: 28,
+                          decoration: const BoxDecoration(
+                            // borderRadius: BorderRadius.circular(14),
+                            shape: BoxShape.circle,
+                            color: Colors.red,
+                          ),
+                          child: const Icon(
+                            Icons.close_rounded,
+                            size: 17,
+                            color: Colors.white70,
+                          ),
+                        ),
+                        onTap: () {
+                          _backToHomePage(context);
+                        },
                       ),
+                    ),
+                    Column(
+                      // crossAxisAlignment: CrossAxisAlignment.stretch,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: subjectsOfSemester
+                          .map(
+                            (sub) => Container(
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [Text(sub.name), Text(sub.code)],
+                                  ),
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: GestureDetector(
+                                      onVerticalDragUpdate: (details) {
+                                        dragYPosition =
+                                            details.globalPosition.dy;
+                                        dragYDelta =
+                                            dragYPosition - pressYPosition;
+                                        _rotateWheel(sub, dragYDelta);
+                                        prevDragYDelta = dragYDelta;
+                                      },
+                                      onTapDown: (details) async {
+                                        pressYPosition =
+                                            details.globalPosition.dy;
+                                        _showWheel(sub);
+                                      },
+                                      // onVerticalDragStart: (_) {
+                                      //   HapticFeedback.mediumImpact();
+                                      // },
+                                      onVerticalDragEnd: (details) {
+                                        _hideWheel();
+                                      },
+                                      onTapUp: (details) {
+                                        _hideWheel();
+                                      },
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          color: Colors.orange,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        height: 50,
+                                        width: 50,
+                                        margin: EdgeInsets.all(10),
+                                        child: Center(child: Text(sub.grade)),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        for (var subject in subjectsOfSemester) {
+                          await _db.update(
+                              widget.tableName, subject.id!, subject);
+                          print(subject.grade);
+                        }
+                        SharedPreferences prefs =
+                            await SharedPreferences.getInstance();
+                        await prefs.setBool('loadFromDB', true);
+                        _backToHomePage(context);
+                      },
+                      child: Text('Save'),
                     ),
                   ],
                 ),
