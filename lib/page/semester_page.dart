@@ -31,7 +31,7 @@ class _SemesterSlideState extends State<SemesterPage> {
       context, List<Subject> subOfSem, String tableName, int semNo) {
     Navigator.of(context)
         .push(PageRouteBuilder(
-          transitionDuration: const Duration(milliseconds: 2000),
+          transitionDuration: const Duration(milliseconds: 1000),
           pageBuilder: (_, __, ___) => EditGradePage(
             semNo: semNo,
             subjectsOfSem: subOfSem,
@@ -106,98 +106,119 @@ class _SemesterSlideState extends State<SemesterPage> {
                       elevation: 4,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20)),
-                      child: Hero(
-                        //! Remove this hero widget and use it for heading cose and grade individually
-                        tag: 'semCard${i}',
-                        child: Container(
-                          child: Material(
-                            color: Colors.transparent,
-                            child: Column(
+                      child: Container(
+                        child: Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Container(
-                                      margin:
-                                          EdgeInsets.only(left: 15, top: 10),
+                                Container(
+                                  margin: EdgeInsets.only(left: 15, top: 10),
+                                  child: Hero(
+                                    tag: 'sem${i}_no',
+                                    child: Material(
+                                      color: Colors.transparent,
                                       child: Text(
                                         'Semester ${i + 1}',
-                                        style: const TextStyle(
-                                            fontSize: 20,
-                                            fontWeight: FontWeight.bold),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .headline2,
                                       ),
                                     ),
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: GestureDetector(
-                                        child: Container(
-                                          margin: const EdgeInsets.only(
-                                              top: 10, right: 10),
-                                          height: 28,
-                                          width: 28,
-                                          decoration: const BoxDecoration(
-                                            // borderRadius: BorderRadius.circular(14),
-                                            shape: BoxShape.circle,
-                                            color: Colors.blue,
-                                          ),
-                                          child: const Icon(
-                                            Icons.edit,
-                                            size: 17,
-                                            color: Colors.white70,
-                                          ),
-                                        ),
-                                        onTap: () {
-                                          _openEditGradePage(
-                                            context,
-                                            (snapshot.data as Map)[
-                                                    widget.semTableList[i]]
-                                                as List<Subject>,
-                                            widget.semTableList[i],
-                                            i,
-                                          );
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Expanded(
-                                  child: ListView(
-                                    padding: EdgeInsets.zero,
-                                    physics: NeverScrollableScrollPhysics(),
-                                    children: ((snapshot.data
-                                                as Map)[widget.semTableList[i]]
-                                            as List<Subject>)
-                                        .map(
-                                          (sub) => ListTile(
-                                            title: Text(sub.name),
-                                            subtitle: Text(sub.code),
-                                            trailing: Text(sub.grade),
-                                          ),
-                                        )
-                                        .toList(),
                                   ),
                                 ),
                                 Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Container(
-                                    child: Text(
-                                      'GPA ${_calculateGpa(
+                                  alignment: Alignment.centerRight,
+                                  child: GestureDetector(
+                                    child: Container(
+                                      margin: const EdgeInsets.only(
+                                          top: 10, right: 10),
+                                      height: 28,
+                                      width: 28,
+                                      decoration: const BoxDecoration(
+                                        // borderRadius: BorderRadius.circular(14),
+                                        shape: BoxShape.circle,
+                                        color: Colors.blue,
+                                      ),
+                                      child: const Icon(
+                                        Icons.edit,
+                                        size: 17,
+                                        color: Colors.white70,
+                                      ),
+                                    ),
+                                    onTap: () {
+                                      _openEditGradePage(
+                                        context,
                                         (snapshot.data
                                                 as Map)[widget.semTableList[i]]
                                             as List<Subject>,
-                                      ).toStringAsFixed(2)}',
-                                      style: const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    margin: const EdgeInsets.only(bottom: 16),
+                                        widget.semTableList[i],
+                                        i,
+                                      );
+                                    },
                                   ),
                                 ),
                               ],
                             ),
-                          ),
+                            Expanded(
+                              child: ListView(
+                                padding: EdgeInsets.symmetric(horizontal: 5),
+                                physics: NeverScrollableScrollPhysics(),
+                                children: ((snapshot.data
+                                            as Map)[widget.semTableList[i]]
+                                        as List<Subject>)
+                                    .map(
+                                      (sub) => ListTile(
+                                        title: Hero(
+                                          tag: 'sem${i}_subName_${sub.code}',
+                                          child: Text(
+                                            sub.name,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .bodyText1,
+                                          ),
+                                        ),
+                                        subtitle: Hero(
+                                          tag: 'sem${i}_subCode_${sub.code}',
+                                          child: Text(
+                                            sub.code,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle1,
+                                          ),
+                                        ),
+                                        trailing: Hero(
+                                          tag: 'sem${i}_subGrade_${sub.code}',
+                                          child: Text(
+                                            sub.grade,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .subtitle1,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Container(
+                                child: Text(
+                                  'GPA ${_calculateGpa(
+                                    (snapshot.data
+                                            as Map)[widget.semTableList[i]]
+                                        as List<Subject>,
+                                  ).toStringAsFixed(2)}',
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                margin: const EdgeInsets.only(bottom: 16),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );

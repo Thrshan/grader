@@ -56,6 +56,31 @@ class MyApp extends StatelessWidget {
             fontWeight: FontWeight.w700,
             color: Color(0xFFD83E3E),
           ),
+          headline2: TextStyle(
+            fontSize: 30.0,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFFD83E3E),
+          ),
+          bodyText1: TextStyle(
+            fontSize: 14.0,
+            fontWeight: FontWeight.normal,
+            color: Color(0xFF000000),
+          ),
+          bodyText2: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.normal,
+            color: Color(0xFF000000),
+          ),
+          subtitle1: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.normal,
+            color: Color(0xFF888888),
+          ),
+          subtitle2: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.normal,
+            color: Color(0xFF888888),
+          ),
           // headline6: TextStyle(fontSize: 36.0, fontStyle: FontStyle.italic),
           // bodyText2: TextStyle(fontSize: 14.0, fontFamily: 'Hind'),
         ),

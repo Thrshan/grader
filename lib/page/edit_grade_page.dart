@@ -34,10 +34,18 @@ class _EditGradePageState extends State<EditGradePage> {
   double initAngle = 0;
   String subName = "";
   String subCode = "";
-  final _db = DatabaseManager.instance;
+  // bool _pageOpened = true;
+  // Color _bgColor = Color(0xFFEFEDE3);
+  // final _db = DatabaseManager.instance;
 
   void _backToHomePage(context) {
     Navigator.of(context).pop();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {});
   }
 
   @override
@@ -118,6 +126,7 @@ class _EditGradePageState extends State<EditGradePage> {
       });
     }
 
+    print('building');
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       // appBar: AppBar(
@@ -125,103 +134,98 @@ class _EditGradePageState extends State<EditGradePage> {
       // ),
       body: Stack(
         children: [
-          Hero(
-            tag: 'semCard${widget.semNo}',
-            child: Container(
-              color: Color(0xFFF5F5F1),
-              child: Material(
-                color: Colors.transparent,
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          margin: EdgeInsets.only(left: 15, top: 10),
-                          child: Text(
-                            'Semester ${1}',
-                            style: const TextStyle(
-                                fontSize: 20, fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: GestureDetector(
-                            child: Container(
-                              margin: const EdgeInsets.only(top: 10, right: 10),
-                              height: 28,
-                              width: 28,
-                              decoration: const BoxDecoration(
-                                // borderRadius: BorderRadius.circular(14),
-                                shape: BoxShape.circle,
-                                color: Colors.blue,
-                              ),
-                              child: const Icon(
-                                Icons.edit,
-                                size: 17,
-                                color: Colors.white70,
+          Container(
+            // duration: const Duration(milliseconds: 5000),
+            color: Theme.of(context).backgroundColor,
+            child: Column(
+              children: [
+                Container(
+                  // width: double.infinity,
+                  margin: EdgeInsets.only(left: 15, top: 50),
+                  child: Hero(
+                    tag: 'sem${widget.semNo}_no',
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        'Semester ${widget.semNo + 1}',
+                        style: Theme.of(context).textTheme.headline2,
+                      ),
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.zero,
+                    physics: NeverScrollableScrollPhysics(),
+                    children: subjectsOfSemester
+                        .map(
+                          (sub) => ListTile(
+                            title: Hero(
+                              tag: 'sem${widget.semNo}_subName_${sub.code}',
+                              child: Text(
+                                sub.name,
+                                style: Theme.of(context).textTheme.bodyText2,
                               ),
                             ),
-                            onTap: () {},
-                          ),
-                        ),
-                      ],
-                    ),
-                    Expanded(
-                      child: ListView(
-                        padding: EdgeInsets.zero,
-                        physics: NeverScrollableScrollPhysics(),
-                        children: subjectsOfSemester
-                            .map(
-                              (sub) => ListTile(
-                                title: Text(sub.name),
-                                subtitle: Text(sub.code),
-                                trailing: GestureDetector(
-                                  onVerticalDragUpdate: (details) {
-                                    dragYPosition = details.globalPosition.dy;
-                                    dragYDelta = dragYPosition - pressYPosition;
-                                    _rotateWheel(sub, dragYDelta);
-                                    prevDragYDelta = dragYDelta;
-                                  },
-                                  onTapDown: (details) async {
-                                    pressYPosition = details.globalPosition.dy;
-                                    _showWheel(sub);
-                                  },
-                                  // onVerticalDragStart: (_) {
-                                  //   HapticFeedback.mediumImpact();
-                                  // },
-                                  onVerticalDragEnd: (details) {
-                                    _hideWheel();
-                                  },
-                                  onTapUp: (details) {
-                                    _hideWheel();
-                                  },
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      color: Colors.orange,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    height: 50,
-                                    width: 50,
-                                    margin: EdgeInsets.all(10),
-                                    child: Center(child: Text(sub.grade)),
+                            subtitle: Hero(
+                              tag: 'sem${widget.semNo}_subCode_${sub.code}',
+                              child: Text(
+                                sub.code,
+                                style: Theme.of(context).textTheme.subtitle1,
+                              ),
+                            ),
+                            trailing: Hero(
+                              tag: 'sem${widget.semNo}_subGrade_${sub.code}',
+                              child: GestureDetector(
+                                onVerticalDragUpdate: (details) {
+                                  dragYPosition = details.globalPosition.dy;
+                                  dragYDelta = dragYPosition - pressYPosition;
+                                  _rotateWheel(sub, dragYDelta);
+                                  prevDragYDelta = dragYDelta;
+                                },
+                                onTapDown: (details) async {
+                                  pressYPosition = details.globalPosition.dy;
+                                  _showWheel(sub);
+                                },
+                                // onVerticalDragStart: (_) {
+                                //   HapticFeedback.mediumImpact();
+                                // },
+                                onVerticalDragEnd: (details) {
+                                  _hideWheel();
+                                },
+                                onTapUp: (details) {
+                                  _hideWheel();
+                                },
+                                child: Container(
+                                  decoration: const BoxDecoration(
+                                    color: Colors.orange,
+                                    shape: BoxShape.circle,
                                   ),
+                                  height: 50,
+                                  width: 50,
+                                  margin: EdgeInsets.all(10),
+                                  child: Center(
+                                      child: Text(
+                                    sub.grade,
+                                    style:
+                                        Theme.of(context).textTheme.subtitle1,
+                                  )),
                                 ),
                               ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Container(
-                        child: Text('GPA'),
-                        margin: const EdgeInsets.only(bottom: 16),
-                      ),
-                    ),
-                  ],
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
                 ),
-              ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    child: Text('GPA'),
+                    margin: const EdgeInsets.only(bottom: 16),
+                  ),
+                ),
+              ],
             ),
           ),
           _showWheelFlag
