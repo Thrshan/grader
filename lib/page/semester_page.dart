@@ -109,20 +109,23 @@ class _SemesterSlideState extends State<SemesterPage> {
                       child: Container(
                         child: Column(
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            Stack(
+                              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Container(
                                   margin: EdgeInsets.only(left: 15, top: 10),
                                   child: Hero(
                                     tag: 'sem${i}_no',
-                                    child: Material(
-                                      color: Colors.transparent,
-                                      child: Text(
-                                        'Semester ${i + 1}',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .headline2,
+                                    child: Align(
+                                      alignment: Alignment.center,
+                                      child: Material(
+                                        color: Colors.transparent,
+                                        child: Text(
+                                          'Semester ${i + 1}',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline2,
+                                        ),
                                       ),
                                     ),
                                   ),
@@ -193,7 +196,7 @@ class _SemesterSlideState extends State<SemesterPage> {
                                             sub.grade,
                                             style: Theme.of(context)
                                                 .textTheme
-                                                .subtitle1,
+                                                .bodyText2,
                                           ),
                                         ),
                                       ),
