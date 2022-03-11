@@ -19,7 +19,7 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
 
   final _lastCarouselNo = 2;
   var _activeCarouselNo = 0;
-  late String _selectRevision;
+  String _selectRevision = 'NULL';
   late String _selectCourse;
   Map _courseNameAndKey = {};
   String dropdownValue = '2021';
@@ -30,12 +30,18 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     return await json.decode(response);
   }
 
-  void _onIntroEnd(context) async {
+  void _onIntroEnd(context, Map coursesData) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('isFirstOpen', false);
     prefs.setString('selectedRevision', _selectRevision);
     prefs.setString('selectedCourse', _courseNameAndKey[_selectCourse]);
     prefs.setString('userName', nameTextFieldController.text);
+    prefs.setString('selectedCourseName', _selectCourse);
+    prefs.setString(
+        'selectedCourseType',
+        coursesData[_selectRevision][_courseNameAndKey[_selectCourse]]['type']
+            .toString());
+
     prefs.setBool('loadDBwithDefault', true);
     Navigator.of(context).pushReplacement(MaterialPageRoute(
       builder: (_) => const MainPage(),
@@ -77,8 +83,8 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     return _activeCarouselNo == 0;
   }
 
-  Future<List<String>> _getRevisions() async {
-    Map coursesData = await _loadJson('courses.json');
+  List<String> _getRevisions(Map coursesData) {
+    //  Map coursesData = await _loadJson('courses.json');
     List<String> revisionsList = (coursesData['revisions'])
         .map<String>((value) => value.toString())
         .toList();
@@ -86,8 +92,8 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
     return revisionsList;
   }
 
-  Future<List<String>> _getCourses() async {
-    Map coursesData = await _loadJson('courses.json');
+  List<String> _getCourses(Map coursesData) {
+    //Map coursesData = await _loadJson('courses.json');
     _courseNameAndKey = {};
     List<String> coursessList = [];
     coursesData[_selectRevision].forEach((k, v) {
@@ -114,130 +120,116 @@ class _OnBoardingPageState extends State<OnBoardingPage> {
       imageFlex: 3,
     );
 
-    return IntroductionScreen(
-      key: introKey,
-      globalBackgroundColor: Colors.white,
-      globalFooter: SizedBox(
-        width: double.infinity,
-        height: 80,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            _activeCarouselNo != 0
-                ? Flexible(
-                    flex: 3,
-                    child: Container(
-                      margin: const EdgeInsets.only(
-                        left: 15,
-                        bottom: 10,
-                      ),
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        onPressed: _previousCarousel,
-                        child: const Text('Previous'),
-                      ),
-                    ),
-                  )
-                : Container(),
-            Flexible(
-              flex: 4,
-              child: Container(
-                margin: const EdgeInsets.only(
-                  right: 15,
-                  left: 15,
-                  bottom: 10,
-                ),
+    return FutureBuilder(
+        future: _loadJson('courses.json'),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return IntroductionScreen(
+              key: introKey,
+              globalBackgroundColor: Colors.white,
+              globalFooter: SizedBox(
                 width: double.infinity,
-                height: 50,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (_isLastCarousel) {
-                      _onIntroEnd(context);
-                    } else {
-                      _nextCarousel();
-                    }
-                  },
-                  child: _isLastCarousel ? Text("Done") : Text('Next'),
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.orange,
-                  ),
+                height: 80,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    _activeCarouselNo != 0
+                        ? Flexible(
+                            flex: 3,
+                            child: Container(
+                              margin: const EdgeInsets.only(
+                                left: 15,
+                                bottom: 10,
+                              ),
+                              width: double.infinity,
+                              height: 50,
+                              child: ElevatedButton(
+                                onPressed: _previousCarousel,
+                                child: const Text('Previous'),
+                              ),
+                            ),
+                          )
+                        : Container(),
+                    Flexible(
+                      flex: 4,
+                      child: Container(
+                        margin: const EdgeInsets.only(
+                          right: 15,
+                          left: 15,
+                          bottom: 10,
+                        ),
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (_isLastCarousel) {
+                              _onIntroEnd(context, snapshot.data as Map);
+                            } else {
+                              _nextCarousel();
+                            }
+                          },
+                          child: _isLastCarousel ? Text("Done") : Text('Next'),
+                          style: ElevatedButton.styleFrom(
+                            primary: Colors.orange,
+                          ),
+                        ),
+                      ),
+                    )
+                  ],
                 ),
               ),
-            )
-          ],
-        ),
-      ),
-      pages: [
-        PageViewModel(
-          title: 'How should I call you',
-          image: _buildFullscrenImage('onboarding-1.jpg'),
-          bodyWidget: TextField(
-            autocorrect: false,
-            controller: nameTextFieldController,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: 'Revision year',
-          image: _buildFullscrenImage('onboarding-2.jpg'),
-          bodyWidget: FutureBuilder(
-            future: _getRevisions(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return DropDownList(
-                  items: snapshot.data as List<String>,
-                  onChange: (value) => _selectRevision = value,
-                );
-              } else {
-                return DropDownList(
-                  items: ['Loading...'],
-                  onChange: (_) {},
-                );
-              }
-            },
-          ),
-          decoration: pageDecoration,
-        ),
-        PageViewModel(
-          title: 'Your discipline?',
-          image: _buildFullscrenImage('onboarding-3.jpg'),
-          bodyWidget: FutureBuilder(
-            future: _getCourses(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return DropDownList(
-                  items: snapshot.data as List<String>,
-                  onChange: (value) => _selectCourse = value,
-                );
-              } else {
-                return DropDownList(
-                  items: ['Select Revision'],
-                  onChange: (_) {},
-                );
-              }
-            },
-          ),
-          decoration: pageDecoration,
-        ),
-      ],
-      onDone: () => _onIntroEnd(context),
-      showSkipButton: false,
-      skipFlex: 0,
-      nextFlex: 0,
-      skip: const Text('Skip'),
-      onChange: (value) => setState(() {
-        _activeCarouselNo = value;
-      }),
-      isProgress: false,
-      showNextButton: false,
-      showDoneButton: false,
-      curve: Curves.fastLinearToSlowEaseIn,
-    );
+              pages: [
+                PageViewModel(
+                  title: 'How should I call you',
+                  image: _buildFullscrenImage('onboarding-1.jpg'),
+                  bodyWidget: TextField(
+                    autocorrect: false,
+                    controller: nameTextFieldController,
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  decoration: pageDecoration,
+                ),
+                PageViewModel(
+                  title: 'Revision year',
+                  image: _buildFullscrenImage('onboarding-2.jpg'),
+                  bodyWidget: DropDownList(
+                    items: _getRevisions(snapshot.data as Map) as List<String>,
+                    onChange: (value) => _selectRevision = value,
+                  ),
+                  decoration: pageDecoration,
+                ),
+                PageViewModel(
+                  title: 'Your discipline?',
+                  image: _buildFullscrenImage('onboarding-3.jpg'),
+                  bodyWidget: DropDownList(
+                    items: (_selectRevision != 'NULL')
+                        ? _getCourses(snapshot.data as Map) as List<String>
+                        : ['Select Revision'],
+                    onChange: (value) => _selectCourse = value,
+                  ),
+                  decoration: pageDecoration,
+                ),
+              ],
+              onDone: () => _onIntroEnd(context, snapshot.data as Map),
+              showSkipButton: false,
+              skipFlex: 0,
+              nextFlex: 0,
+              skip: const Text('Skip'),
+              onChange: (value) => setState(() {
+                _activeCarouselNo = value;
+              }),
+              isProgress: false,
+              showNextButton: false,
+              showDoneButton: false,
+              curve: Curves.fastLinearToSlowEaseIn,
+            );
+          } else {
+            return Container();
+          }
+        });
   }
 }
