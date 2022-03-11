@@ -40,7 +40,7 @@ class _MainPageState extends State<MainPage> {
     Map courses = await _loadJson('courses.json');
     String courseFileName = courses[revisionYear][courseKey]['file'];
     Map subjectDetails = await _loadJson(courseFileName);
-    // print(subjectDetails);
+    print(subjectDetails);
 
     List<String> semesters = (subjectDetails['semesterKeys'] as List)
         .map((e) => e.toString())
@@ -48,7 +48,6 @@ class _MainPageState extends State<MainPage> {
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setStringList('semTables', semesters);
-
     Map semAndSubMap = {};
 
     for (var sem in semesters) {
@@ -74,14 +73,18 @@ class _MainPageState extends State<MainPage> {
 
   Future<Map<String, Object>> _loadPreferences() async {
     if (_prefChanged) {
-      print('loadingPreferences');
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      print('loadingPreferences');
       // Map<String, Object> preferences = {};
       _preferences['selectedRevision'] = prefs.getString('selectedRevision')!;
       _preferences['selectedCourse'] = prefs.getString('selectedCourse')!;
       _preferences['userName'] = prefs.getString('userName')!;
-      bool loadTheDB = prefs.getBool('loadDBwithDefault') ?? true;
+      _preferences['selectedCourseName'] =
+          prefs.getString('selectedCourseName')!;
+      _preferences['selectedCourseType'] =
+          prefs.getString('selectedCourseType')!;
 
+      bool loadTheDB = prefs.getBool('loadDBwithDefault') ?? true;
       if (loadTheDB) {
         await _gatherCourseData(_preferences['selectedRevision'] as String,
             _preferences['selectedCourse'] as String);
