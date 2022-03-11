@@ -129,7 +129,7 @@
         {
           "id": 1,
           "name": "Boom Boom Raze",
-          "code": "AG005",
+          "code": "RA005",
           "credit": 2,
           "elective": 0
         },
@@ -143,7 +143,7 @@
         {
           "id": 1,
           "name": "Chamber the gentleman",
-          "code": "AG006",
+          "code": "CH006",
           "credit": 2,
           "elective": 0
         },

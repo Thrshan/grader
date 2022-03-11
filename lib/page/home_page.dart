@@ -42,12 +42,22 @@ class _HomePageState extends State<HomePage> {
                   child: Icon(
                     Icons.circle,
                     size: 50,
+                    color: Color(0xFF95B3ED),
                   ),
                 ),
                 Text(
                   widget.data['userName'] as String,
                   style: Theme.of(context).textTheme.headline1,
                 ),
+              ],
+            ),
+          ),
+          Container(
+            child: Column(
+              children: [
+                // Text(snapshot.data.toString() as String),
+                Text(widget.data['selectedCourseType'] as String),
+                Text(widget.data['selectedCourseName'] as String),
               ],
             ),
           ),

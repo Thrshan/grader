@@ -26,7 +26,7 @@ class DatabaseManager {
   }
 
   Future createTable(String tableName) async {
-    print('Creating $tableName');
+    // print('Creating $tableName');
     final db = await instance.database;
     const idType = "INTEGER PRIMARY KEY AUTOINCREMENT";
     const integerType = "INTEGER NOT NULL";
@@ -45,10 +45,10 @@ class DatabaseManager {
   }
 
   Future<Subject> create(String tableName, Subject data) async {
-    print('Creating row');
+    // print('Creating row');
     final db = await instance.database;
     final id = await db.insert(tableName, data.toMap());
-    print('Row created');
+    // print('Row created');
     return data.copy(id: id);
   }
 
@@ -129,9 +129,9 @@ class DatabaseManager {
 
   Future<void> dropTable(String tableName) async {
     final db = await instance.database;
-    print('Dropping $tableName');
+    // print('Dropping $tableName');
     await db.execute('DROP TABLE IF EXISTS $tableName');
-    print('Dropped $tableName');
+    // print('Dropped $tableName');
 
     return;
   }
