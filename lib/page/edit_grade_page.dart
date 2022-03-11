@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'dart:math' as math;
+
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:flutter/services.dart';
@@ -36,9 +37,9 @@ class _EditGradePageState extends State<EditGradePage> {
   String subCode = "";
   // bool _pageOpened = true;
   // Color _bgColor = Color(0xFFEFEDE3);
-  // final _db = DatabaseManager.instance;
+  final _db = DatabaseManager.instance;
 
-  void _backToHomePage(context) {
+  void _backToSemesterPage(context) {
     Navigator.of(context).pop();
   }
 
@@ -126,7 +127,6 @@ class _EditGradePageState extends State<EditGradePage> {
       });
     }
 
-    print('building');
     return Scaffold(
       backgroundColor: Theme.of(context).backgroundColor,
       // appBar: AppBar(
@@ -197,18 +197,18 @@ class _EditGradePageState extends State<EditGradePage> {
                                   _hideWheel();
                                 },
                                 child: Container(
-                                  decoration: const BoxDecoration(
-                                    color: Colors.orange,
+                                  decoration: BoxDecoration(
+                                    color: Theme.of(context).splashColor,
                                     shape: BoxShape.circle,
                                   ),
                                   height: 50,
                                   width: 50,
-                                  margin: EdgeInsets.all(10),
+                                  margin: EdgeInsets.all(6),
                                   child: Center(
                                       child: Text(
                                     sub.grade,
                                     style:
-                                        Theme.of(context).textTheme.subtitle1,
+                                        Theme.of(context).textTheme.bodyText2,
                                   )),
                                 ),
                               ),
@@ -218,13 +218,58 @@ class _EditGradePageState extends State<EditGradePage> {
                         .toList(),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    child: Text('GPA'),
-                    margin: const EdgeInsets.only(bottom: 16),
-                  ),
-                ),
+                // Align(
+                //   alignment: Alignment.bottomCenter,
+                //   child: Container(
+                //     child: Text('GPA'),
+                //     margin: const EdgeInsets.only(bottom: 16),
+                //   ),
+                // ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () {
+                        _backToSemesterPage(context);
+                      },
+                      child: Container(
+                          width: 70,
+                          height: 40,
+                          child: Center(child: Text('Close'))),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFFFF5353),
+                        onPrimary: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                    ElevatedButton(
+                      onPressed: () async {
+                        for (var subject in subjectsOfSemester) {
+                          await _db.update(
+                              widget.tableName, subject.id!, subject);
+                          // print(subject.grade);
+                        }
+                        // SharedPreferences prefs =
+                        //     await SharedPreferences.getInstance();
+                        // await prefs.setBool('loadDBwithDefault', true);
+                        _backToSemesterPage(context);
+                      },
+                      child: Container(
+                          width: 70,
+                          height: 40,
+                          child: Center(child: Text('Save'))),
+                      style: ElevatedButton.styleFrom(
+                        primary: Color(0xFFC57BFF),
+                        onPrimary: Colors.white,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                    ),
+                  ],
+                )
               ],
             ),
           ),
@@ -256,7 +301,7 @@ class _EditGradePageState extends State<EditGradePage> {
             label: 'Semesters',
           ),
         ],
-        currentIndex: 0,
+        currentIndex: 2,
         backgroundColor: Theme.of(context).backgroundColor,
         selectedItemColor: Theme.of(context).disabledColor,
         unselectedItemColor: Theme.of(context).disabledColor,
@@ -265,129 +310,5 @@ class _EditGradePageState extends State<EditGradePage> {
         elevation: 0,
       ),
     );
-
-    // Stack(
-    //   children: [
-    //     Hero(
-    //       tag: 'semCard${widget.semNo}',
-    //       child: Card(
-    //         color: Color(0x00EFEDE3),
-    //         // margin: EdgeInsets.all(20),
-    //         elevation: 5,
-    //         child: Container(
-    //           margin: EdgeInsets.all(5),
-    //           padding: EdgeInsets.all(5),
-    //           child: Column(
-    //             children: [
-    //               SizedBox(
-    //                 height: 50,
-    //               ),
-    //               Align(
-    //                 alignment: Alignment.centerLeft,
-    //                 child: GestureDetector(
-    //                   child: Container(
-    //                     margin: const EdgeInsets.only(top: 10, right: 10),
-    //                     height: 28,
-    //                     width: 28,
-    //                     decoration: const BoxDecoration(
-    //                       // borderRadius: BorderRadius.circular(14),
-    //                       shape: BoxShape.circle,
-    //                       color: Colors.red,
-    //                     ),
-    //                     child: const Icon(
-    //                       Icons.close_rounded,
-    //                       size: 17,
-    //                       color: Colors.white70,
-    //                     ),
-    //                   ),
-    //                   onTap: () {
-    //                     _backToHomePage(context);
-    //                   },
-    //                 ),
-    //               ),
-    //               Column(
-    //                 // crossAxisAlignment: CrossAxisAlignment.stretch,
-    //                 mainAxisAlignment: MainAxisAlignment.end,
-    //                 children: subjectsOfSemester
-    //                     .map(
-    //                       (sub) => Container(
-    //                         child: Row(
-    //                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                           children: [
-    //                             Column(
-    //                               crossAxisAlignment: CrossAxisAlignment.start,
-    //                               children: [Text(sub.name), Text(sub.code)],
-    //                             ),
-    //                             Align(
-    //                               alignment: Alignment.centerRight,
-    //                               child: GestureDetector(
-    //                                 onVerticalDragUpdate: (details) {
-    //                                   dragYPosition = details.globalPosition.dy;
-    //                                   dragYDelta =
-    //                                       dragYPosition - pressYPosition;
-    //                                   _rotateWheel(sub, dragYDelta);
-    //                                   prevDragYDelta = dragYDelta;
-    //                                 },
-    //                                 onTapDown: (details) async {
-    //                                   pressYPosition =
-    //                                       details.globalPosition.dy;
-    //                                   _showWheel(sub);
-    //                                 },
-    //                                 // onVerticalDragStart: (_) {
-    //                                 //   HapticFeedback.mediumImpact();
-    //                                 // },
-    //                                 onVerticalDragEnd: (details) {
-    //                                   _hideWheel();
-    //                                 },
-    //                                 onTapUp: (details) {
-    //                                   _hideWheel();
-    //                                 },
-    //                                 child: Container(
-    //                                   decoration: const BoxDecoration(
-    //                                     color: Colors.orange,
-    //                                     shape: BoxShape.circle,
-    //                                   ),
-    //                                   height: 50,
-    //                                   width: 50,
-    //                                   margin: EdgeInsets.all(10),
-    //                                   child: Center(child: Text(sub.grade)),
-    //                                 ),
-    //                               ),
-    //                             ),
-    //                           ],
-    //                         ),
-    //                       ),
-    //                     )
-    //                     .toList(),
-    //               ),
-    //               ElevatedButton(
-    //                 onPressed: () async {
-    //                   for (var subject in subjectsOfSemester) {
-    //                     await _db.update(
-    //                         widget.tableName, subject.id!, subject);
-    //                     print(subject.grade);
-    //                   }
-    //                   SharedPreferences prefs =
-    //                       await SharedPreferences.getInstance();
-    //                   await prefs.setBool('loadFromDB', true);
-    //                   _backToHomePage(context);
-    //                 },
-    //                 child: Text('Save'),
-    //               ),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ),
-    //     _showWheelFlag
-    //         ? GradeWheel(
-    //             angle: _angle,
-    //             initAngle: initAngle,
-    //             subName: subName,
-    //             subCode: subCode,
-    //           )
-    //         : Container(),
-    //   ],
-    // );
   }
 }
